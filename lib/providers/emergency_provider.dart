@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../models/ambulance_model.dart';
+import '../models/hospital_model.dart';
 import '../services/ambulance_repository.dart';
 import 'view_state.dart';
 

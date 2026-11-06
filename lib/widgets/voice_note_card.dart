@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../models/voice_note_model.dart';
+import '../theme/app_theme.dart';
 
 class VoiceNoteCard extends StatelessWidget {
   final VoiceNoteModel note;
@@ -31,7 +33,7 @@ class VoiceNoteCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF4C2E96),
+        color: AppColors.voiceBg,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -41,7 +43,7 @@ class VoiceNoteCard extends StatelessWidget {
             width: 34,
             height: 34,
             decoration: const BoxDecoration(
-              color: Color(0xFF6B4EE6),
+              color: AppColors.brandPurple,
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -89,7 +91,7 @@ class VoiceNoteCard extends StatelessWidget {
                     Text(
                       _formattedTime,
                       style: const TextStyle(
-                        color: Color(0xFFD4C5F9),
+                        color: AppColors.voiceDuration,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/view_state.dart';
+import '../../routes/app_router.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/primary_button.dart';
@@ -35,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await auth.login(_userController.text.trim(), _passwordController.text);
     if (!mounted) return;
     if (auth.state.isSuccess) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).pushReplacementNamed(AppRoutes.home);
     }
   }
 
@@ -94,7 +95,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () => Navigator.of(context).pushNamed('/forgot-password'),
+                    onPressed: () =>
+                        Navigator.of(context).pushNamed(AppRoutes.forgotPassword),
                     child: const Text('Forgot password?'),
                   ),
                 ),
@@ -117,7 +119,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     Expanded(child: Divider()),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('Or continue with', style: TextStyle(color: AppColors.textSecondary)),
+                      child: Text(
+                        'Or continue with',
+                        style: TextStyle(color: AppColors.textSecondary),
+                      ),
                     ),
                     Expanded(child: Divider()),
                   ],
@@ -142,7 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const Text("Don't have an account? "),
                       GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed('/signup'),
+                        onTap: () =>
+                            Navigator.of(context).pushNamed(AppRoutes.signup),
                         child: const Text(
                           'Sign up',
                           style: TextStyle(

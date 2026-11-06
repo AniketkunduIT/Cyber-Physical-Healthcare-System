@@ -1,3 +1,5 @@
+import '../utils/formatters.dart';
+
 class PrescriptionModel {
   final String id;
   final String fileName;
@@ -19,13 +21,7 @@ class PrescriptionModel {
     this.isUploaded = true,
   });
 
-  String get formattedSize {
-    if (fileSizeBytes < 1024) return '$fileSizeBytes B';
-    if (fileSizeBytes < 1024 * 1024) {
-      return '${(fileSizeBytes / 1024).toStringAsFixed(1)} KB';
-    }
-    return '${(fileSizeBytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-  }
+  String get formattedSize => Formatters.formatFileSize(fileSizeBytes);
 
   PrescriptionModel copyWith({
     String? id,

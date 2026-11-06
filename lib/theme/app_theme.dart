@@ -24,10 +24,29 @@ class AppColors {
   static const Color error = Color(0xFFDC2626);
   static const Color warning = Color(0xFFF59E0B);
 
+  // Brand purple tones
+  static const Color brandPurple = Color(0xFF6B4EE6);
+  static const Color brandPurpleDark = Color(0xFF5B30DE);
+  static const Color accentPurple = Color(0xFF7C3AED);
+  static const Color lightPurple = Color(0xFFEDE9FE);
+  static const Color avatarBg = Color(0xFFE7E1FB);
+  static const Color navyButton = Color(0xFF14224D);
+
+  // Upload action button tones
+  static const Color photoBg = Color(0xFFD1F2ED);
+  static const Color photoText = Color(0xFF0F766E);
+  static const Color galleryBg = Color(0xFFD6E3F8);
+  static const Color galleryText = Color(0xFF1D4ED8);
+
+  // Voice note tones
+  static const Color voiceBg = Color(0xFF4C2E96);
+  static const Color voiceDuration = Color(0xFFD4C5F9);
+
   static const List<Color> primaryGradient = [primaryStart, primaryEnd];
   static const List<Color> emergencyGradient = [emergencyStart, emergencyEnd];
   static const List<Color> profileGradient = [profileStart, profileEnd];
   static const List<Color> hospitalGradient = [hospitalStart, hospitalEnd];
+  static const List<Color> brandPurpleGradient = [brandPurple, brandPurpleDark];
 }
 
 class AppRadii {

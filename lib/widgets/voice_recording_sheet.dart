@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+
 import '../models/voice_note_model.dart';
 import '../theme/app_theme.dart';
+import '../utils/formatters.dart';
 
 class VoiceRecordingSheet extends StatefulWidget {
   final ValueChanged<VoiceNoteModel>? onSaved;
@@ -100,11 +102,7 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
     super.dispose();
   }
 
-  String get _formattedTime {
-    final mins = (_seconds ~/ 60).toString().padLeft(2, '0');
-    final secs = (_seconds % 60).toString().padLeft(2, '0');
-    return '$mins:$secs';
-  }
+  String get _formattedTime => Formatters.formatDuration(_seconds);
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +237,7 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
                       width: 54,
                       height: 54,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFEDE9FE),
+                        color: AppColors.lightPurple,
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -301,7 +299,7 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
                     width: 54,
                     height: 54,
                     decoration: const BoxDecoration(
-                      color: Color(0xFF7C3AED),
+                      color: AppColors.accentPurple,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(

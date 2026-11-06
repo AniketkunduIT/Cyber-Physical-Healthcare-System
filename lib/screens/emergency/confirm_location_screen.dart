@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/emergency_provider.dart';
+import '../../routes/app_router.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_screen_header.dart';
 import '../../widgets/mock_map_background.dart';
 import '../../widgets/primary_button.dart';
 
@@ -20,22 +22,7 @@ class ConfirmLocationScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Welcome back', style: Theme.of(context).textTheme.bodyMedium),
-                      Text('Confirm your location', style: Theme.of(context).textTheme.headlineMedium),
-                    ],
-                  ),
-                  const CircleAvatar(
-                    backgroundColor: Color(0xFFE7E1FB),
-                    child: Icon(Icons.person, color: AppColors.primaryStart),
-                  ),
-                ],
-              ),
+              const AppScreenHeader(title: 'Confirm your location'),
               const SizedBox(height: 18),
               Expanded(
                 child: MockMapBackground(
@@ -55,19 +42,29 @@ class ConfirmLocationScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'GPS shows you here.',
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                               SizedBox(height: 4),
                               Text(
                                 'Drag map to adjust if incorrect.',
-                                style: TextStyle(color: Colors.white70, fontSize: 12),
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ],
                           ),
                         ),
                       ),
-                      const Icon(Icons.location_on, color: AppColors.emergencyStart, size: 46),
+                      const Icon(
+                        Icons.location_on,
+                        color: AppColors.emergencyStart,
+                        size: 46,
+                      ),
                     ],
                   ),
                 ),
@@ -78,7 +75,9 @@ class ConfirmLocationScreen extends StatelessWidget {
                 gradientColors: AppColors.emergencyGradient,
                 onPressed: () {
                   emergency.updateConfirmedLocation(12.9352, 77.6146);
-                  Navigator.of(context).pushReplacementNamed('/ambulance-assigned');
+                  Navigator.of(context).pushReplacementNamed(
+                    AppRoutes.ambulanceAssigned,
+                  );
                 },
               ),
             ],

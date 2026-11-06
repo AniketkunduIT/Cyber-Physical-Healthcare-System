@@ -1,3 +1,5 @@
+import '../utils/formatters.dart';
+
 class VoiceNoteModel {
   final String id;
   final int durationSeconds;
@@ -9,11 +11,7 @@ class VoiceNoteModel {
     required this.recordedAt,
   });
 
-  String get formattedDuration {
-    final minutes = (durationSeconds ~/ 60).toString().padLeft(2, '0');
-    final seconds = (durationSeconds % 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
-  }
+  String get formattedDuration => Formatters.formatDuration(durationSeconds);
 
   VoiceNoteModel copyWith({
     String? id,

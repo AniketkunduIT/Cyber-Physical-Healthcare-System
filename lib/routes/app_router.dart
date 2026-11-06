@@ -10,23 +10,38 @@ import '../screens/hospitals/nearby_hospitals_screen.dart';
 import '../screens/medical_profile/add_prescription_screen.dart';
 import '../screens/medical_profile/medical_profile_screen.dart';
 
-/// Simple named-route generator with a shared slide+fade transition, used
-/// instead of go_router's declarative API for straightforward push/pop flows.
+/// Centralized named route identifiers to prevent typos across navigation calls.
+class AppRoutes {
+  AppRoutes._();
+
+  static const String root = '/';
+  static const String login = '/login';
+  static const String signup = '/signup';
+  static const String forgotPassword = '/forgot-password';
+  static const String home = '/home';
+  static const String medicalProfile = '/medical-profile';
+  static const String addPrescription = '/add-prescription';
+  static const String confirmLocation = '/confirm-location';
+  static const String ambulanceAssigned = '/ambulance-assigned';
+  static const String hospitals = '/hospitals';
+}
+
+/// Simple named-route generator with a shared slide+fade transition.
 class AppRouter {
   AppRouter._();
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final builders = <String, WidgetBuilder>{
-      '/': (_) => const LoginScreen(),
-      '/login': (_) => const LoginScreen(),
-      '/signup': (_) => const SignupScreen(),
-      '/forgot-password': (_) => const ForgotPasswordScreen(),
-      '/home': (_) => const HomeScreen(),
-      '/medical-profile': (_) => const MedicalProfileScreen(),
-      '/add-prescription': (_) => const AddPrescriptionScreen(),
-      '/confirm-location': (_) => const ConfirmLocationScreen(),
-      '/ambulance-assigned': (_) => const AmbulanceAssignedScreen(),
-      '/hospitals': (_) => const NearbyHospitalsScreen(),
+      AppRoutes.root: (_) => const LoginScreen(),
+      AppRoutes.login: (_) => const LoginScreen(),
+      AppRoutes.signup: (_) => const SignupScreen(),
+      AppRoutes.forgotPassword: (_) => const ForgotPasswordScreen(),
+      AppRoutes.home: (_) => const HomeScreen(),
+      AppRoutes.medicalProfile: (_) => const MedicalProfileScreen(),
+      AppRoutes.addPrescription: (_) => const AddPrescriptionScreen(),
+      AppRoutes.confirmLocation: (_) => const ConfirmLocationScreen(),
+      AppRoutes.ambulanceAssigned: (_) => const AmbulanceAssignedScreen(),
+      AppRoutes.hospitals: (_) => const NearbyHospitalsScreen(),
     };
 
     final builder = builders[settings.name] ?? (_) => const LoginScreen();

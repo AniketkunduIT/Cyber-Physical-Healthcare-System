@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../routes/app_router.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_screen_header.dart';
 import '../../widgets/home_action_card.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -19,37 +21,31 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Welcome back', style: Theme.of(context).textTheme.bodyMedium),
-                      Text('Stay Safe.', style: Theme.of(context).textTheme.headlineMedium),
-                    ],
-                  ),
-                  PopupMenuButton<String>(
-                    onSelected: (value) {
-                      if (value == 'logout') {
-                        auth.logout();
-                        Navigator.of(context).pushNamedAndRemoveUntil('/login', (_) => false);
-                      }
-                    },
-                    itemBuilder: (_) => [
-                      PopupMenuItem(
-                        value: 'name',
-                        enabled: false,
-                        child: Text(auth.currentUser?.name ?? 'Guest'),
-                      ),
-                      const PopupMenuItem(value: 'logout', child: Text('Log out')),
-                    ],
-                    child: const CircleAvatar(
-                      backgroundColor: Color(0xFFE7E1FB),
-                      child: Icon(Icons.person, color: AppColors.primaryStart),
+              AppScreenHeader(
+                title: 'Stay Safe.',
+                trailing: PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'logout') {
+                      auth.logout();
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                        AppRoutes.login,
+                        (_) => false,
+                      );
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      value: 'name',
+                      enabled: false,
+                      child: Text(auth.currentUser?.name ?? 'Guest'),
                     ),
+                    const PopupMenuItem(value: 'logout', child: Text('Log out')),
+                  ],
+                  child: const CircleAvatar(
+                    backgroundColor: AppColors.avatarBg,
+                    child: Icon(Icons.person, color: AppColors.primaryStart),
                   ),
-                ],
+                ),
               ),
               const SizedBox(height: 28),
               HomeActionCard(
@@ -57,7 +53,8 @@ class HomeScreen extends StatelessWidget {
                 subtitle: 'Call an Ambulance',
                 icon: Icons.call,
                 gradientColors: AppColors.emergencyGradient,
-                onTap: () => Navigator.of(context).pushNamed('/confirm-location'),
+                onTap: () =>
+                    Navigator.of(context).pushNamed(AppRoutes.confirmLocation),
               ),
               const SizedBox(height: 16),
               HomeActionCard(
@@ -65,7 +62,8 @@ class HomeScreen extends StatelessWidget {
                 subtitle: 'History, allergies & medication',
                 icon: Icons.badge,
                 gradientColors: AppColors.profileGradient,
-                onTap: () => Navigator.of(context).pushNamed('/medical-profile'),
+                onTap: () =>
+                    Navigator.of(context).pushNamed(AppRoutes.medicalProfile),
               ),
               const SizedBox(height: 16),
               HomeActionCard(
@@ -73,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                 subtitle: 'Find help close to you',
                 icon: Icons.local_hospital,
                 gradientColors: AppColors.hospitalGradient,
-                onTap: () => Navigator.of(context).pushNamed('/hospitals'),
+                onTap: () => Navigator.of(context).pushNamed(AppRoutes.hospitals),
               ),
             ],
           ),

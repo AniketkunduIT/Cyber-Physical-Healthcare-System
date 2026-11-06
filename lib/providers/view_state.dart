@@ -10,7 +10,7 @@ class ViewState<T> {
 
   const ViewState.initial() : this._(status: ViewStatus.initial);
   const ViewState.loading() : this._(status: ViewStatus.loading);
-  const ViewState.success(T data)
+  const ViewState.success([T? data])
       : this._(status: ViewStatus.success, data: data);
   const ViewState.empty() : this._(status: ViewStatus.empty);
   const ViewState.error(String message)

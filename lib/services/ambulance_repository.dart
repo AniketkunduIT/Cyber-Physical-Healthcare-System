@@ -1,4 +1,5 @@
 import '../models/ambulance_model.dart';
+import '../models/hospital_model.dart';
 
 class AmbulanceRepository {
   Future<AmbulanceModel> requestAmbulance({

@@ -22,7 +22,7 @@ class MediRescueApp extends StatelessWidget {
         title: 'MediRescue',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light,
-        initialRoute: '/login',
+        initialRoute: AppRoutes.login,
         onGenerateRoute: AppRouter.onGenerateRoute,
       ),
     );
