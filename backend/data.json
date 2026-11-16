@@ -189,6 +189,26 @@
             "known_disease": "mild asthma",
             "allergies": "dust",
             "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P43c83008",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P3a04d02b",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
         }
     ]
 }

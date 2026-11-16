@@ -1,85 +1,153 @@
-# MediRescue — Emergency Medical Assistance App
+# Cyber Physical Healthcare System (MediRescue)
 
-A production-structured Flutter app matching the provided UI: login/sign up,
-a "Stay Safe" home hub, a medical profile form with an emergency-type grid,
-a confirm-location screen, and a live ambulance-assignment tracker.
+A full-stack emergency healthcare and medical assistance platform featuring a **Flutter** mobile/web frontend and a **Python FastAPI** backend with SQLite database, real-time audio recording & raw file storage, medical record management, and emergency ambulance dispatch.
 
-## Getting started
+---
 
+## Project Structure
+
+```text
+Cyber/
+├── backend/                                # Python FastAPI Backend
+│   ├── app/                                # Modular application package
+│   │   ├── core/                           # Configuration & Security (JWT, Bcrypt)
+│   │   ├── models/                         # SQLAlchemy database models
+│   │   ├── schemas/                        # Pydantic v2 validation models
+│   │   ├── services/                       # Business logic services
+│   │   ├── routers/                        # REST API endpoints
+│   │   ├── database.py                     # Database connection & auto-seeding
+│   │   └── main.py                         # FastAPI app entrypoint
+│   ├── tests/                              # Pytest test suite (15 tests)
+│   ├── uploads/                            # Uploaded files
+│   │   ├── audio/                          # Dedicated raw audio storage
+│   │   └── prescriptions/                  # Uploaded prescription files
+│   ├── data.json                           # Pre-seeded legacy patient records
+│   ├── requirements.txt                    # Backend dependencies
+│   ├── run_server.py                       # Standalone server startup script
+│   └── .env.example                        # Environment configuration template
+│
+└── Cyber-Physical-Healthcare-System/       # Flutter Frontend Application
+    ├── lib/                                # Flutter source code
+    │   ├── models/                         # Data models
+    │   ├── providers/                      # State management (Provider)
+    │   ├── routes/                         # Navigation router
+    │   ├── screens/                        # UI screens (Auth, Home, Medical Profile, Dispatch)
+    │   ├── services/                       # API repositories & Audio recorder helper
+    │   └── widgets/                        # Reusable UI widgets & Voice recording sheet
+    ├── test/                               # Flutter widget tests
+    └── pubspec.yaml                        # Flutter package configuration
+```
+
+---
+
+## Quick Start Guide
+
+### 1. Backend Setup (FastAPI)
+
+#### Prerequisites
+- Python 3.10+ installed
+
+#### Steps
 ```bash
+# 1. Navigate to backend directory
+cd backend
+
+# 2. Create and activate a virtual environment
+python -m venv venv
+
+# Windows (PowerShell):
+.\venv\Scripts\Activate.ps1
+# macOS / Linux:
+source venv/bin/activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. (Optional) Create .env from template
+copy .env.example .env     # Windows
+# or: cp .env.example .env # macOS/Linux
+
+# 5. Run the FastAPI server
+python run_server.py
+```
+
+The backend starts on `http://127.0.0.1:8000`.
+- **Interactive Swagger API Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **Database**: Automatically initialized and seeded on first run (`cyber_healthcare.db`).
+
+---
+
+### 2. Frontend Setup (Flutter)
+
+#### Prerequisites
+- Flutter SDK 3.19+ installed
+
+#### Steps
+```bash
+# 1. Navigate to Flutter project directory
+cd Cyber-Physical-Healthcare-System
+
+# 2. Fetch packages
 flutter pub get
+
+# 3. Run the application
+# On Chrome (Web):
+flutter run -d chrome
+
+# On Windows (Desktop):
+flutter run -d windows
+
+# On Android Emulator / Connected Device:
 flutter run
 ```
 
-Requires Flutter 3.19+ (Dart 3+). No API keys or backend are required — all
-network calls are simulated by the repository classes in `lib/services/`.
+> **Note for Android Studio & Emulators**:  
+> The app automatically detects Android and connects to `http://10.0.2.2:8000` (the host PC address for the Android emulator). Cleartext traffic is enabled in `AndroidManifest.xml`.
 
-## Architecture
+---
 
+## Default Login Credentials
+
+A seeded test account is pre-configured:
+
+| Field | Value |
+|---|---|
+| **Username / Phone** | `user_001` |
+| **Password** | `password123` |
+| **Full Name** | Riya Sharma |
+| **Role** | Patient |
+
+You can also click **"Sign up"** on the login screen to register any new account.
+
+---
+
+## Audio Recording & Raw File Storage
+
+- **Recording**: Real microphone audio is captured in uncompressed WAV or MP3 format using the native `record` library.
+- **Upload**: Binary multipart POST to `/api/audio/upload`.
+- **Storage**: Raw audio files are saved directly to `backend/uploads/audio/` with unique timestamped filenames (`rec_<uuid>_<timestamp>.mp3`).
+- **Healing**: If uploaded audio has corrupted headers, the backend automatically converts and heals it into a standard `.mp3` file using `lameenc`.
+- **Playback & Download**: Streamed directly via `/api/audio/{audio_id}`.
+
+---
+
+## Running Automated Tests
+
+### Backend Tests (pytest)
+```bash
+cd backend
+python -m pytest tests/test_backend.py -v
 ```
-lib/
-  main.dart                    # Entry point
-  app.dart                     # MaterialApp + provider wiring
-  theme/app_theme.dart         # Colors, radii, spacing, ThemeData
-  models/                      # Plain Dart models with fromJson/toJson
-    user_model.dart
-    medical_profile_model.dart
-    emergency_type_model.dart
-    ambulance_model.dart       # + HospitalModel
-  services/                    # Mock repositories simulating API calls
-    auth_repository.dart
-    medical_repository.dart
-    ambulance_repository.dart
-  providers/                   # ChangeNotifier state managers (Provider)
-    view_state.dart            # Shared Loading/Success/Empty/Error wrapper
-    auth_provider.dart
-    medical_profile_provider.dart
-    emergency_provider.dart
-  routes/app_router.dart       # Named routes + custom fade/slide transitions
-  widgets/                     # Reusable, composable UI pieces
-    custom_text_field.dart
-    primary_button.dart
-    home_action_card.dart
-    emergency_type_card.dart
-    mock_map_background.dart
-    state_views.dart           # LoadingView / ErrorView / EmptyView
-  screens/
-    auth/  home/  medical_profile/  emergency/  hospitals/
+*(All 15 test suites verify auth, patient CRUD, audio upload, healing, emergency dispatch, and stats)*
+
+### Frontend Tests (flutter test)
+```bash
+cd Cyber-Physical-Healthcare-System
+flutter test
 ```
+*(All widget tests verify authentication, profile actions, prescription forms, and voice recording sheet)*
 
-## State management
+---
 
-Uses **Provider** with `ChangeNotifier`. Each feature has its own provider
-(`AuthProvider`, `MedicalProfileProvider`, `EmergencyProvider`) exposing a
-`ViewState<T>` (`initial / loading / success / empty / error`) so every
-screen renders the same four UI states consistently.
-
-## Navigation
-
-Named routes via `Navigator.onGenerateRoute` (see `AppRouter`), wrapped in a
-`PageRouteBuilder` that applies a shared fade + slide transition. Swap this
-for `go_router` by mapping the same route table into `GoRoute`s if
-deep-linking is needed later.
-
-## Flow
-
-1. **Auth**: `/login` → `/signup` / `/forgot-password`
-2. **Home** (`/home`): Emergency, My Medical Profile, Nearby Hospitals
-3. **Medical Profile** (`/medical-profile`): demographics form + emergency
-   type grid, saved through `MedicalRepository`
-4. **Emergency workflow**: `/confirm-location` → `/ambulance-assigned`
-   (live ETA, equipment list, call driver/medical team, cancel)
-5. **Nearby Hospitals** (`/hospitals`): list with call-to-action per hospital
-
-## Notes on mocked pieces
-
-- `MockMapBackground` draws a lightweight grid instead of embedding
-  `google_maps_flutter`, so the app runs without API keys. Swap it for a real
-  map widget by keeping the same child/overlay structure.
-- BMI is derived from weight alone (using an assumed average height) since
-  the source design only collects age and weight — replace
-  `MedicalProfileModel.bmi` with a real height-based calculation once a
-  height field is added.
-- All repositories use `Future.delayed` + validation to simulate real
-  network latency and error responses; replace their bodies with real HTTP
-  calls (e.g. `dio`/`http`) without touching any screen or provider code.
+## License
+MIT License

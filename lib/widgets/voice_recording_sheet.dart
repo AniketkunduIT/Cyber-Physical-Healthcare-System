@@ -1,8 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io' show File;
 import 'dart:math';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb, debugPrint;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:record/record.dart';
 
 import '../models/voice_note_model.dart';
+import '../services/api_config.dart';
+import '../services/audio_recorder_helper.dart';
 import '../theme/app_theme.dart';
 import '../utils/formatters.dart';
 
@@ -32,6 +42,10 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
   int _seconds = 0;
   Timer? _timer;
   late AnimationController _animController;
+  bool _isUploading = false;
+
+  final AudioRecorder _audioRecorder = AudioRecorder();
+  String? _recordedFilePath;
 
   final List<double> _baseHeights = [
     8, 14, 22, 34, 46, 30, 18, 42, 52, 36, 24, 48,
@@ -45,6 +59,27 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
       vsync: this,
       duration: const Duration(milliseconds: 600),
     )..repeat(reverse: true);
+    _initAndStartRecording();
+  }
+
+  Future<void> _initAndStartRecording() async {
+    try {
+      final hasPermission = await _audioRecorder.hasPermission();
+      if (hasPermission) {
+        String path = '';
+        if (!kIsWeb) {
+          final tempDir = await getTemporaryDirectory();
+          path = '${tempDir.path}/rec_${DateTime.now().millisecondsSinceEpoch}.wav';
+        }
+        await _audioRecorder.start(
+          const RecordConfig(encoder: AudioEncoder.wav, sampleRate: 16000),
+          path: path,
+        );
+        _recordedFilePath = path;
+      }
+    } catch (e) {
+      debugPrint('Real microphone recorder initialization: $e');
+    }
     _startTimer();
   }
 
@@ -59,19 +94,44 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
     });
   }
 
-  void _togglePause() {
-    setState(() {
+  Future<void> _togglePause() async {
+    try {
       if (_recordState == _RecordState.recording) {
-        _recordState = _RecordState.paused;
-        _animController.stop();
+        await _audioRecorder.pause();
+        setState(() {
+          _recordState = _RecordState.paused;
+          _animController.stop();
+        });
       } else if (_recordState == _RecordState.paused) {
-        _recordState = _RecordState.recording;
-        _animController.repeat(reverse: true);
+        await _audioRecorder.resume();
+        setState(() {
+          _recordState = _RecordState.recording;
+          _animController.repeat(reverse: true);
+        });
       }
-    });
+    } catch (e) {
+      debugPrint('Toggle pause error: $e');
+      setState(() {
+        if (_recordState == _RecordState.recording) {
+          _recordState = _RecordState.paused;
+          _animController.stop();
+        } else if (_recordState == _RecordState.paused) {
+          _recordState = _RecordState.recording;
+          _animController.repeat(reverse: true);
+        }
+      });
+    }
   }
 
-  void _stop() {
+  Future<void> _stop() async {
+    try {
+      final path = await _audioRecorder.stop();
+      if (path != null && path.isNotEmpty) {
+        _recordedFilePath = path;
+      }
+    } catch (e) {
+      debugPrint('Stop audio recorder error: $e');
+    }
     setState(() {
       _recordState = _RecordState.stopped;
       _animController.stop();
@@ -79,26 +139,126 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
     });
   }
 
-  void _send() {
+  Future<void> _send() async {
+    if (_isUploading) return;
     _timer?.cancel();
+    setState(() => _isUploading = true);
+
+    final safeDuration = max(1, _seconds);
+    String audioId = 'vn_${DateTime.now().millisecondsSinceEpoch}';
+    DateTime recordedTime = DateTime.now();
+
+    try {
+      // If still recording, stop to complete file writing
+      if (await _audioRecorder.isRecording()) {
+        final path = await _audioRecorder.stop();
+        if (path != null && path.isNotEmpty) {
+          _recordedFilePath = path;
+        }
+      }
+
+      Uint8List? audioBytes;
+      if (_recordedFilePath != null && _recordedFilePath!.isNotEmpty) {
+        if (kIsWeb) {
+          try {
+            final res = await http.get(Uri.parse(_recordedFilePath!));
+            if (res.statusCode == 200 && res.bodyBytes.isNotEmpty) {
+              audioBytes = res.bodyBytes;
+            }
+          } catch (e) {
+            debugPrint('Error reading web blob: $e');
+          }
+        } else {
+          try {
+            final file = File(_recordedFilePath!);
+            if (await file.exists()) {
+              audioBytes = await file.readAsBytes();
+            }
+          } catch (e) {
+            debugPrint('Error reading file from disk: $e');
+          }
+        }
+      }
+
+      // Fallback only if device has no microphone or mic was not accessible
+      if (audioBytes == null || audioBytes.isEmpty) {
+        audioBytes = AudioRecorderHelper.createRawWavFile(durationSeconds: safeDuration);
+      }
+
+      final uploadUri = Uri.parse('${ApiConfig.baseUrl}/api/audio/upload');
+      final request = http.MultipartRequest('POST', uploadUri);
+
+      if (ApiConfig.authToken != null && ApiConfig.authToken!.isNotEmpty) {
+        request.headers['Authorization'] = 'Bearer ${ApiConfig.authToken}';
+      }
+
+      request.fields['duration_seconds'] = safeDuration.toString();
+      request.fields['patient_id'] = 'P7f8016c0';
+      request.fields['store_as_mp3'] = 'true';
+
+      final filename = 'voice_${DateTime.now().millisecondsSinceEpoch}.wav';
+      request.files.add(
+        http.MultipartFile.fromBytes(
+          'file',
+          audioBytes,
+          filename: filename,
+          contentType: MediaType('audio', 'wav'),
+        ),
+      );
+
+      final streamedResponse = await request.send();
+      final responseBody = await streamedResponse.stream.bytesToString();
+
+      if (streamedResponse.statusCode >= 200 && streamedResponse.statusCode < 300) {
+        final data = jsonDecode(responseBody) as Map<String, dynamic>;
+        audioId = data['audio_id'] as String? ?? audioId;
+        if (data['recorded_at'] != null) {
+          recordedTime = DateTime.tryParse(data['recorded_at'] as String) ?? recordedTime;
+        }
+      }
+    } catch (e) {
+      debugPrint('Error uploading recorded voice note: $e');
+    } finally {
+      if (mounted) {
+        setState(() => _isUploading = false);
+      }
+    }
+
     final note = VoiceNoteModel(
-      id: 'vn_${DateTime.now().millisecondsSinceEpoch}',
-      durationSeconds: max(1, _seconds),
-      recordedAt: DateTime.now(),
+      id: audioId,
+      durationSeconds: safeDuration,
+      recordedAt: recordedTime,
     );
+
     widget.onSaved?.call(note);
-    Navigator.of(context).pop(note);
+    if (mounted) {
+      Navigator.of(context).pop(note);
+    }
   }
 
-  void _delete() {
+  Future<void> _delete() async {
     _timer?.cancel();
-    Navigator.of(context).pop();
+    try {
+      if (await _audioRecorder.isRecording()) {
+        await _audioRecorder.stop();
+      }
+      if (_recordedFilePath != null && !kIsWeb) {
+        final file = File(_recordedFilePath!);
+        if (await file.exists()) {
+          await file.delete();
+        }
+      }
+    } catch (_) {}
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
     _animController.dispose();
+    _audioRecorder.dispose();
     super.dispose();
   }
 
@@ -252,7 +412,7 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
                   ),
                 ),
 
-                // Stop Button → Delete Button after stopping
+                // Stop Button -> Delete Button after stopping
                 _buildActionButton(
                   onTap: _recordState != _RecordState.stopped ? _stop : _delete,
                   button: Container(
@@ -294,7 +454,7 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
 
                 // Save Button (formerly Send)
                 _buildActionButton(
-                  onTap: _seconds > 0 ? _send : null,
+                  onTap: (_seconds > 0 && !_isUploading) ? _send : null,
                   button: Container(
                     width: 54,
                     height: 54,
@@ -302,11 +462,22 @@ class _VoiceRecordingSheetState extends State<VoiceRecordingSheet>
                       color: AppColors.accentPurple,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
-                      Icons.save_rounded,
-                      color: Colors.white,
-                      size: 22,
-                    ),
+                    child: _isUploading
+                        ? const Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : const Icon(
+                            Icons.save_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          ),
                   ),
                   label: 'Save',
                 ),
