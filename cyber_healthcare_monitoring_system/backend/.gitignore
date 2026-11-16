@@ -1,0 +1,37 @@
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment variables
+.env
+!.env.example
+
+# Database (auto-generated at runtime)
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploads content (keep folder via .gitkeep)
+uploads/audio/*
+!uploads/audio/.gitkeep
+uploads/prescriptions/*
+!uploads/prescriptions/.gitkeep
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

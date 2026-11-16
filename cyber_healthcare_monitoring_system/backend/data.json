@@ -1,0 +1,194 @@
+{
+    "patients": [
+        {
+            "patient_id": "P82a3a10e",
+            "age": 23,
+            "weight": 56.5,
+            "bmi": 19.6,
+            "gender": "female",
+            "known_disease": "seasonal allergies",
+            "allergies": "peanuts",
+            "emergency_type": "trauma"
+        },
+        {
+            "patient_id": "P7f8016c0",
+            "age": 22,
+            "weight": 55.0,
+            "bmi": 21.5,
+            "gender": "female",
+            "known_disease": "none",
+            "allergies": "peanuts",
+            "emergency_type": "trauma"
+        },
+        {
+            "patient_id": "Pb61f82ce",
+            "age": 22,
+            "weight": 55.0,
+            "bmi": 21.5,
+            "gender": "female",
+            "known_disease": "none",
+            "allergies": "peanuts",
+            "emergency_type": "trauma"
+        },
+        {
+            "patient_id": "Pa22f94e5",
+            "age": 50,
+            "weight": 72.0,
+            "bmi": 22.0,
+            "gender": "male",
+            "known_disease": "high BP",
+            "allergies": "NA",
+            "emergency_type": "stroke"
+        },
+        {
+            "patient_id": "Pcacad8df",
+            "age": 21,
+            "weight": 59.0,
+            "bmi": 20.4,
+            "gender": "female",
+            "known_disease": "hypertension",
+            "allergies": "peanuts",
+            "emergency_type": "trauma"
+        },
+        {
+            "patient_id": "P8c0966e3",
+            "age": 21,
+            "weight": 59.0,
+            "bmi": 20.4,
+            "gender": "female",
+            "known_disease": "hypertension",
+            "allergies": "peanuts",
+            "emergency_type": "trauma"
+        },
+        {
+            "patient_id": "P2bef4f39",
+            "age": 22,
+            "weight": 60.0,
+            "bmi": 20.8,
+            "gender": "male",
+            "known_disease": "blod pressure",
+            "allergies": "NA",
+            "emergency_type": "accident"
+        },
+        {
+            "patient_id": "P3564a759",
+            "age": 29,
+            "weight": 68.5,
+            "bmi": 22.4,
+            "gender": "male",
+            "known_disease": "None",
+            "allergies": "Penicillin",
+            "emergency_type": "cardiac"
+        },
+        {
+            "patient_id": "P1f4ef45a",
+            "age": 45,
+            "weight": 78.0,
+            "bmi": 27.0,
+            "gender": "male",
+            "known_disease": "edjtjg",
+            "allergies": "gkytyriyr",
+            "emergency_type": "cardiac_arrest"
+        },
+        {
+            "patient_id": "P20218e13",
+            "age": 40,
+            "weight": 58.0,
+            "bmi": 20.1,
+            "gender": "female",
+            "known_disease": "Migrane",
+            "allergies": "NA",
+            "emergency_type": "accident"
+        },
+        {
+            "patient_id": "P7e4619a9",
+            "age": 22,
+            "weight": 59.0,
+            "bmi": 20.4,
+            "gender": "female",
+            "known_disease": "hypertension",
+            "allergies": "peanuts",
+            "emergency_type": "trauma"
+        },
+        {
+            "patient_id": "P42932339",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P145eba12",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P18ad6999",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P155b3871",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P1b1968fe",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P653d9984",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "Pb1197af8",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "Pbb5132f1",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        }
+    ]
+}
