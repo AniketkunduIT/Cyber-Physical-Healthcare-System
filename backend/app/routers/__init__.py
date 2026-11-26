@@ -4,6 +4,7 @@ from app.routers.medical_records import router as medical_router
 from app.routers.audio import router as audio_router
 from app.routers.emergency import router as emergency_router
 from app.routers.dashboard import router as dashboard_router
+from app.routers.shap import router as shap_router
 
 __all__ = [
     "auth_router",
@@ -11,5 +12,6 @@ __all__ = [
     "medical_router",
     "audio_router",
     "emergency_router",
-    "dashboard_router"
+    "dashboard_router",
+    "shap_router"
 ]

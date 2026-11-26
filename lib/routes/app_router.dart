@@ -9,6 +9,7 @@ import '../screens/home/home_screen.dart';
 import '../screens/hospitals/nearby_hospitals_screen.dart';
 import '../screens/medical_profile/add_prescription_screen.dart';
 import '../screens/medical_profile/medical_profile_screen.dart';
+import '../screens/shap/shap_report_screen.dart';
 
 /// Centralized named route identifiers to prevent typos across navigation calls.
 class AppRoutes {
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String confirmLocation = '/confirm-location';
   static const String ambulanceAssigned = '/ambulance-assigned';
   static const String hospitals = '/hospitals';
+  static const String shapReport = '/shap-report';
 }
 
 /// Simple named-route generator with a shared slide+fade transition.
@@ -42,6 +44,7 @@ class AppRouter {
       AppRoutes.confirmLocation: (_) => const ConfirmLocationScreen(),
       AppRoutes.ambulanceAssigned: (_) => const AmbulanceAssignedScreen(),
       AppRoutes.hospitals: (_) => const NearbyHospitalsScreen(),
+      AppRoutes.shapReport: (_) => const ShapReportScreen(),
     };
 
     final builder = builders[settings.name] ?? (_) => const LoginScreen();

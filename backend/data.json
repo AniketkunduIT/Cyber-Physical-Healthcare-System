@@ -209,6 +209,66 @@
             "known_disease": "mild asthma",
             "allergies": "dust",
             "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "Pe6049cf7",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P46946eae",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "Pcb8d51bc",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P36c00e40",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "P3d5ba7e7",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
+        },
+        {
+            "patient_id": "Pd8b4351c",
+            "age": 35,
+            "weight": 70.0,
+            "bmi": 24.2,
+            "gender": "male",
+            "known_disease": "mild asthma",
+            "allergies": "dust",
+            "emergency_type": "respiratory"
         }
     ]
 }

@@ -1,0 +1,52 @@
+{
+    "model_type": "xgboost_classifier",
+    "model_version": "1.0.0-dev",
+    "description": "Development / Reference XGBoost triage model for SHAP explainability verification. Replace with production trained model.",
+    "feature_names": [
+        "age",
+        "bmi",
+        "heart_rate",
+        "systolic_bp",
+        "diastolic_bp",
+        "oxygen_saturation",
+        "temperature_c",
+        "breathlessness",
+        "chest_pain",
+        "fever",
+        "vomiting"
+    ],
+    "feature_types": {
+        "age": "int",
+        "bmi": "float",
+        "heart_rate": "int",
+        "systolic_bp": "int",
+        "diastolic_bp": "int",
+        "oxygen_saturation": "float",
+        "temperature_c": "float",
+        "breathlessness": "int",
+        "chest_pain": "int",
+        "fever": "int",
+        "vomiting": "int"
+    },
+    "class_labels": {
+        "0": "Standard",
+        "1": "Priority",
+        "2": "Urgent"
+    },
+    "default_values": {
+        "age": 40,
+        "bmi": 23.5,
+        "heart_rate": 75,
+        "systolic_bp": 120,
+        "diastolic_bp": 80,
+        "oxygen_saturation": 98.0,
+        "temperature_c": 37.0,
+        "breathlessness": 0,
+        "chest_pain": 0,
+        "fever": 0,
+        "vomiting": 0
+    },
+    "objective": "multi:softprob",
+    "num_classes": 3,
+    "is_dev_model": true
+}

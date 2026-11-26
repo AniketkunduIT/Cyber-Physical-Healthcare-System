@@ -42,8 +42,14 @@ class Settings:
         for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",")
     ]
 
+    # Machine Learning & SHAP Explainability
+    ML_MODELS_DIR: Path = BASE_DIR / os.getenv("ML_MODELS_DIR", "ml_models")
+    XGBOOST_MODEL_PATH: Path = BASE_DIR / os.getenv("XGBOOST_MODEL_PATH", "ml_models/xgboost_triage_model.json")
+    MODEL_METADATA_PATH: Path = BASE_DIR / os.getenv("MODEL_METADATA_PATH", "ml_models/model_metadata.json")
+
 settings = Settings()
 
-# Ensure upload directories exist
+# Ensure directories exist
 settings.UPLOAD_AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 settings.UPLOAD_PRESCRIPTION_DIR.mkdir(parents=True, exist_ok=True)
+settings.ML_MODELS_DIR.mkdir(parents=True, exist_ok=True)

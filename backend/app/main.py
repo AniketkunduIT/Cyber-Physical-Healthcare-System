@@ -4,19 +4,26 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.database import init_db
+from app.ml.dev_model_generator import generate_dev_model_if_missing
 from app.routers import (
     auth_router,
     patients_router,
     medical_router,
     audio_router,
     emergency_router,
-    dashboard_router
+    dashboard_router,
+    shap_router
 )
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Initialize database tables and seed legacy & default data
     init_db()
+    # Ensure development XGBoost model and metadata exist for SHAP explainability
+    try:
+        generate_dev_model_if_missing()
+    except Exception as e:
+        pass
     yield
 
 app = FastAPI(
@@ -42,6 +49,7 @@ app.include_router(medical_router)
 app.include_router(audio_router)
 app.include_router(emergency_router)
 app.include_router(dashboard_router)
+app.include_router(shap_router)
 
 @app.get("/", tags=["Root"])
 def root():

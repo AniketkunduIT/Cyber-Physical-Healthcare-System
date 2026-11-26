@@ -131,14 +131,104 @@ You can also click **"Sign up"** on the login screen to register any new account
 
 ---
 
+## SHAP Explainability & Clinical Decision Support
+
+The backend features a modular **SHAP (SHapley Additive exPlanations)** explainability engine using `shap.TreeExplainer` for tree-based XGBoost models.
+
+### Key Capabilities
+- **Individual Patient Attributions**: Explains vital sign and symptom contributions towards triage urgency classes (e.g., `Standard`, `Priority`, `Urgent`).
+- **Directionality**: Identifies whether each feature moves the risk assessment toward (`positive`) or away from (`negative`) the target class relative to the model baseline.
+- **Strict Clinical Safety**: Purely a clinical decision-support capability. Does not override emergency red-flag rules or clinical clinician discretion.
+- **Plug-and-Play Model Replacement**: The model loader is completely decoupled from explanation logic. Any trained XGBoost model (`.json`, `.ubj`, `.bin`, `.pkl`, `.joblib`) can be plugged in without changing backend code.
+
+### Endpoints
+- `POST /api/shap/explain`: Computes SHAP values and feature direction for a patient.
+- `GET /api/shap/model-info`: Retrieves active model metadata, expected feature list, and types.
+- `POST /api/shap/reload-model`: Flushes explainer cache and re-reads model files from disk.
+
+### Sample Request (`POST /api/shap/explain`)
+```json
+{
+  "features": {
+    "age": 68,
+    "bmi": 28.5,
+    "heart_rate": 135,
+    "systolic_bp": 175,
+    "diastolic_bp": 105,
+    "oxygen_saturation": 86.0,
+    "temperature_c": 39.2,
+    "breathlessness": 1,
+    "chest_pain": 1,
+    "fever": 1,
+    "vomiting": 0
+  }
+}
+```
+
+### Sample Response
+```json
+{
+  "status": "success",
+  "predicted_class": "Urgent",
+  "explanation": [
+    {
+      "feature": "oxygen_saturation",
+      "shap_value": 0.5103,
+      "direction": "positive"
+    },
+    {
+      "feature": "breathlessness",
+      "shap_value": 0.4974,
+      "direction": "positive"
+    },
+    {
+      "feature": "chest_pain",
+      "shap_value": 0.4736,
+      "direction": "positive"
+    },
+    {
+      "feature": "heart_rate",
+      "shap_value": 0.4591,
+      "direction": "positive"
+    },
+    {
+      "feature": "systolic_bp",
+      "shap_value": 0.3648,
+      "direction": "positive"
+    },
+    {
+      "feature": "vomiting",
+      "shap_value": -0.0008,
+      "direction": "negative"
+    }
+  ],
+  "base_value": 0.0676,
+  "target_class": "Urgent",
+  "probabilities": {
+    "Standard": 0.0081,
+    "Priority": 0.0131,
+    "Urgent": 0.9788
+  },
+  "safety_disclaimer": "Clinical Decision Support Only. SHAP values indicate model feature contributions relative to the baseline expected value; they do not represent absolute clinical risk percentages or direct medical causes of symptoms."
+}
+```
+
+### Model Replacement Procedure
+1. Export your trained XGBoost model in JSON format (e.g. `clf.save_model("my_triage_model.json")`).
+2. Place the file in `backend/ml_models/` (or update `XGBOOST_MODEL_PATH` in `.env`).
+3. Update `backend/ml_models/model_metadata.json` with the model's `feature_names`, `feature_types`, and `class_labels`.
+4. Call `POST /api/shap/reload-model` to immediately load the new model into memory.
+
+---
+
 ## Running Automated Tests
 
 ### Backend Tests (pytest)
 ```bash
 cd backend
-python -m pytest tests/test_backend.py -v
+python -m pytest tests/ -v
 ```
-*(All 15 test suites verify auth, patient CRUD, audio upload, healing, emergency dispatch, and stats)*
+*(All 26 test suites verify auth, patient CRUD, audio upload, healing, emergency dispatch, dashboard stats, and SHAP explainability)*
 
 ### Frontend Tests (flutter test)
 ```bash

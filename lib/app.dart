@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/emergency_provider.dart';
 import 'providers/medical_profile_provider.dart';
+import 'providers/shap_provider.dart';
 import 'routes/app_router.dart';
 import 'theme/app_theme.dart';
 
@@ -17,6 +18,7 @@ class MediRescueApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => MedicalProfileProvider()),
         ChangeNotifierProvider(create: (_) => EmergencyProvider()),
+        ChangeNotifierProvider(create: (_) => ShapProvider()),
       ],
       child: MaterialApp(
         title: 'MediRescue',

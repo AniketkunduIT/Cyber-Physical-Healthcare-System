@@ -8,6 +8,12 @@ from app.schemas.medical_record import (
 from app.schemas.audio import AudioMetadataResponse, AudioListResponse
 from app.schemas.emergency import AmbulanceRequest, AmbulanceResponse, HospitalResponse
 from app.schemas.dashboard import DashboardStatsResponse
+from app.schemas.shap import (
+    FeatureExplanationItem,
+    ShapExplainRequest,
+    ShapExplainResponse,
+    ModelInfoResponse,
+)
 
 __all__ = [
     "UserRegisterRequest", "UserLoginRequest", "PasswordResetRequest", "UserResponse",
@@ -17,5 +23,9 @@ __all__ = [
     "VoiceNoteResponse",
     "AudioMetadataResponse", "AudioListResponse",
     "AmbulanceRequest", "AmbulanceResponse", "HospitalResponse",
-    "DashboardStatsResponse"
+    "DashboardStatsResponse",
+    "FeatureExplanationItem",
+    "ShapExplainRequest",
+    "ShapExplainResponse",
+    "ModelInfoResponse",
 ]
